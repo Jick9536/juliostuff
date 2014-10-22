@@ -1,0 +1,11 @@
+C:\Users\Jick-PC\Desktop\Julio\Trabajo\Universidad\ICC\NPI\Practicas\juliostuff\P1\Movimiento\15\bin\Release\SkeletonBasics-WPF.exe
+C:\Users\Jick-PC\Desktop\Julio\Trabajo\Universidad\ICC\NPI\Practicas\juliostuff\P1\Movimiento\15\bin\Release\SkeletonBasics-WPF.pdb
+C:\Users\Jick-PC\Desktop\Julio\Trabajo\Universidad\ICC\NPI\Practicas\juliostuff\P1\Movimiento\15\obj\Release\MainWindow.baml
+C:\Users\Jick-PC\Desktop\Julio\Trabajo\Universidad\ICC\NPI\Practicas\juliostuff\P1\Movimiento\15\obj\Release\MainWindow.g.cs
+C:\Users\Jick-PC\Desktop\Julio\Trabajo\Universidad\ICC\NPI\Practicas\juliostuff\P1\Movimiento\15\obj\Release\App.g.cs
+C:\Users\Jick-PC\Desktop\Julio\Trabajo\Universidad\ICC\NPI\Practicas\juliostuff\P1\Movimiento\15\obj\Release\SkeletonBasics-WPF_MarkupCompile.cache
+C:\Users\Jick-PC\Desktop\Julio\Trabajo\Universidad\ICC\NPI\Practicas\juliostuff\P1\Movimiento\15\obj\Release\SkeletonBasics-WPF.g.resources
+C:\Users\Jick-PC\Desktop\Julio\Trabajo\Universidad\ICC\NPI\Practicas\juliostuff\P1\Movimiento\15\obj\Release\Microsoft.Samples.Kinect.SkeletonBasics.Properties.Resources.resources
+C:\Users\Jick-PC\Desktop\Julio\Trabajo\Universidad\ICC\NPI\Practicas\juliostuff\P1\Movimiento\15\obj\Release\SkeletonBasics-WPF.csproj.GenerateResource.Cache
+C:\Users\Jick-PC\Desktop\Julio\Trabajo\Universidad\ICC\NPI\Practicas\juliostuff\P1\Movimiento\15\obj\Release\SkeletonBasics-WPF.exe
+C:\Users\Jick-PC\Desktop\Julio\Trabajo\Universidad\ICC\NPI\Practicas\juliostuff\P1\Movimiento\15\obj\Release\SkeletonBasics-WPF.pdb

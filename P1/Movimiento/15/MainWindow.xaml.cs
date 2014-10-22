@@ -6,6 +6,9 @@
 
 namespace Microsoft.Samples.Kinect.SkeletonBasics
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.IO;
     using System.Windows;
     using System.Windows.Media;
@@ -49,7 +52,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// <summary>
         /// Brush used for drawing joints that are currently tracked
         /// </summary>
-        private readonly Brush trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 255, 218, 185));
+        private Brush trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 255, 218, 185));
 
         /// <summary>
         /// Brush used for drawing joints that are currently inferred
@@ -59,7 +62,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// <summary>
         /// Pen used for drawing bones that are currently tracked
         /// </summary>
-        private readonly Pen trackedBonePen = new Pen(Brushes.Red, 6);
+        private Pen trackedBonePen = new Pen(Brushes.Red, 6);
 
         /// <summary>
         /// Pen used for drawing bones that are currently inferred
@@ -227,6 +230,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
                         if (skel.TrackingState == SkeletonTrackingState.Tracked)
                         {
+                            this.position15(skel);
                             this.DrawBonesAndJoints(skel, dc);
                         }
                         else if (skel.TrackingState == SkeletonTrackingState.PositionOnly)
@@ -278,9 +282,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             this.DrawBone(skeleton, drawingContext, JointType.AnkleLeft, JointType.FootLeft);
 
             // Right Leg
-            this.DrawBone(skeleton, drawingContext, JointType.HipRight, JointType.KneeRight);
-            this.DrawBone(skeleton, drawingContext, JointType.KneeRight, JointType.AnkleRight);
-            this.DrawBone(skeleton, drawingContext, JointType.AnkleRight, JointType.FootRight);
+            //this.DrawBone(skeleton, drawingContext, JointType.HipRight, JointType.KneeRight);
+            //this.DrawBone(skeleton, drawingContext, JointType.KneeRight, JointType.AnkleRight);
+            //this.DrawBone(skeleton, drawingContext, JointType.AnkleRight, JointType.FootRight);
 
             // Render Joints
             foreach (Joint joint in skeleton.Joints)
@@ -351,6 +355,76 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
             drawingContext.DrawLine(drawPen, this.SkeletonPointToScreen(joint0.Position), this.SkeletonPointToScreen(joint1.Position));
         }
+        private void position15(Skeleton skeleton)
+        {
+            if (this.cruz(skeleton))
+            {
+                //Pintamos en verda a lo bruto
+                this.trackedBonePen = new Pen(Brushes.Green, 6);
+                this.trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
+            }
+            else
+            {
+                //Pintamos el Color por defecto
+                this.trackedBonePen = new Pen(Brushes.Red, 6);
+                this.trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 255, 218, 185));
+            }
+        }
+
+
+        private bool cruz (Skeleton skeleton)
+        {
+            //Guardamos las posiciones a comparar
+            //Parte izquierda del brazo
+            float pos_y_hombro_left=skeleton.Joints[JointType.ShoulderLeft].Position.Y;
+            float pos_y_elbow_left=skeleton.Joints[JointType.ElbowLeft].Position.Y;
+            float pos_y_wrist_left=skeleton.Joints[JointType.WristLeft].Position.Y;
+            
+            //Parte derecha del brazo
+            float pos_y_hombro_right = skeleton.Joints[JointType.ShoulderRight].Position.Y;
+            float pos_y_elbow_right = skeleton.Joints[JointType.ElbowRight].Position.Y;
+            float pos_y_wrist_right = skeleton.Joints[JointType.WristRight].Position.Y;
+
+            //Brazo estirado
+             
+            if ( 
+                !((((pos_y_hombro_left * 1.05) <=  pos_y_elbow_left) || ((pos_y_hombro_left  * 0.95) >= pos_y_elbow_left)) 
+                &&
+                (((pos_y_hombro_left * 1.05) <= pos_y_wrist_left) || ((pos_y_hombro_left * 0.95) >= pos_y_wrist_left))
+                &&
+                (((pos_y_hombro_right * 1.05) <= pos_y_elbow_right) || ((pos_y_hombro_right * 0.95) >= pos_y_elbow_right))
+                &&
+                (((pos_y_hombro_right * 1.05) <= pos_y_wrist_right) || ((pos_y_hombro_right * 0.95) >= pos_y_wrist_right)))
+                )
+            {
+                return true;    
+            }
+            else
+            {
+                return false;
+            }
+         }
+
+        /// <summary>
+        /// Euclidean norm of 3-component Vector
+        /// Funcion referenciada por Julio Rodríguez Martínez usada por Pedro Bosch
+        /// https://github.com/pebosch/npi/blob/master/SkeletonBasics-WPF/MainWindow.xaml.cs
+        /// Refernciada por
+        /// https://github.com/bencms/Kinect_LynxMotion6/blob/master/Kinect.cs
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <returns></returns>
+        //private static double vectorNorm(double x, double y, double z)
+        //{
+        //    return Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2) + Math.Pow(z, 2));
+        //}
+        private static double vectorNorm(double x, double z)
+        {
+            return Math.Sqrt(Math.Pow(x, 2) + Math.Pow(z, 2));
+        }
+
 
     }
 }
