@@ -357,9 +357,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         }
         private void position15(Skeleton skeleton)
         {
-            if (this.cruz(skeleton))
+            if (this.cruz(skeleton) && this.pierna_izq_arriba(skeleton))
             {
-                //Pintamos en verda a lo bruto
+                //Pintamos en verde a lo bruto
                 this.trackedBonePen = new Pen(Brushes.Green, 6);
                 this.trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
             }
@@ -371,7 +371,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             }
         }
 
-
+        /// <summary>
+        /// Detecta posición en cruz
+        /// </summary>
+        /// <param name="skeleton"> skeleton acual. Nube de puntos</param>
         private bool cruz (Skeleton skeleton)
         {
             //Guardamos las posiciones a comparar
@@ -406,24 +409,100 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
          }
 
         /// <summary>
-        /// Euclidean norm of 3-component Vector
-        /// Funcion referenciada por Julio Rodríguez Martínez usada por Pedro Bosch
-        /// https://github.com/pebosch/npi/blob/master/SkeletonBasics-WPF/MainWindow.xaml.cs
-        /// Refernciada por
-        /// https://github.com/bencms/Kinect_LynxMotion6/blob/master/Kinect.cs
+        /// Detecta posición en cruz
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="z"></param>
-        /// <returns></returns>
-        //private static double vectorNorm(double x, double y, double z)
-        //{
-        //    return Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2) + Math.Pow(z, 2));
-        //}
-        private static double vectorNorm(double x, double z)
+        /// <param name="skeleton"> skeleton acual. Nube de puntos</param>
+        /// <param name="angulo"> Angulo deseado alcanzar al mover el pie. Consideramos que este angulo no va a poder pasar de 90 grados. Si no se especifica un angulo presupongo angulo de 20 grados</param>
+        private bool pierna_izq_arriba(Skeleton skeleton, double angulo = 20.0)
         {
-            return Math.Sqrt(Math.Pow(x, 2) + Math.Pow(z, 2));
+            //Si el angulo propocionado esta dentro de lo razonable 
+            if (angulo >= 0 && angulo <= 90)
+            {
+                //Alamcenamos la posición de las rodillas y tobillos izquierdos 
+                Joint rodilla_izquierda = skeleton.Joints[JointType.KneeLeft];
+                SkeletonPoint pos_rodilla_izquierda = rodilla_izquierda.Position;
+                Joint tobillo_izquierdo = skeleton.Joints[JointType.AnkleLeft];
+                SkeletonPoint pos_tobillo_izquierdo = tobillo_izquierdo.Position;
+                //Alamcenamos la posición de las rodillas y tobillos derechos
+                Joint  rodilla_derecha= skeleton.Joints[JointType.KneeRight];
+                SkeletonPoint pos_rodilla_derecha = rodilla_derecha.Position;
+                Joint tobillo_derecho = skeleton.Joints[JointType.AnkleRight];
+                SkeletonPoint pos_tobillo_derecho = tobillo_derecho.Position;
+
+                
+                //int a, b, c, d;
+                //double distanciaPD, distanciaPI, angulo, division, grados;
+                //double g_entrada;
+                //g_entrada = 0;
+
+                //a = (int)(pos_rodilla_izquierda.Z * 100.0);
+                //b = (int)(pos_tobillo_izquierdo.Z * 100.0);
+                //c = (int)(pos_rodilla_derecha.Y * 100.0);
+               // d = (int)(pos_tobillo_derecho.Y * 100.0);
+
+               // distanciaPI = Math.Abs(b - a);                                        // lado opuesto
+               // distanciaPD = Math.Abs(c - d);                                        // lado adyacente
+
+                //Calculo de catetos del triangulo
+
+                double cateto_a = dist_ecuclidea(pos_tobillo_izquierdo.Z, pos_tobillo_izquierdo.Z, pos_rodilla_izquierda.Y, pos_tobillo_izquierdo.Y);           // lado adyacente
+                double cateto_b = dist_ecuclidea(pos_tobillo_izquierdo.Z, pos_rodilla_izquierda.Z, pos_rodilla_izquierda.Y, pos_rodilla_izquierda.Y);           // lado opuesto
+
+                //Calculo de angulo a comparar
+                double angulo_actual =  conversor_rad_a_grados(Math.Atan((cateto_a/cateto_b)));
+
+                /*  if (grados > 20)
+                {
+                    agregarLinea(skeleton.Joints[JointType.KneeLeft], skeleton.Joints[JointType.AnkleLeft], 2);
+                    agregarLinea(skeleton.Joints[JointType.AnkleLeft], skeleton.Joints[JointType.FootLeft], 2);
+
+                }
+                else
+                {
+                    agregarLinea(skeleton.Joints[JointType.KneeLeft], skeleton.Joints[JointType.AnkleLeft], 1);
+                    agregarLinea(skeleton.Joints[JointType.AnkleLeft], skeleton.Joints[JointType.FootLeft], 1);
+                }
+                */
+
+                if (angulo_actual >= angulo)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+             //En caso contrario no se puede realizar el movimiento de la pierna
+            else
+            {
+                return false;
+            }
         }
+
+        /// <summary>
+        /// Conversor de grados a radianes
+        /// </summary>
+        /// <param name="angulo"> angulo en radianes a convertir a grados</param>
+        private double conversor_rad_a_grados(double angulo)
+        {
+            return ((angulo * 180) / Math.PI);
+        }
+
+
+        /// <summary>
+        /// Distancia euclidea entre dos puntos
+        /// </summary>
+        /// <param name="p1_x"></param>
+        /// <param name="p2_x"></param>
+        /// <param name="p1_y"></param>
+        /// <param name="p2_y"></param>
+        /// <returns> Distancia entre dos puntos double</returns>
+        private static double dist_ecuclidea(double p1_x, double p2_x, double p1_y, double p2_y)
+        {
+            return Math.Sqrt(Math.Pow((p2_x-p1_x),2)+(Math.Pow((p2_y-p1_y,2))));
+        }
+
 
 
     }
