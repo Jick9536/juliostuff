@@ -328,6 +328,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// <param name="drawingContext">drawing context to draw to</param>
         /// <param name="jointType0">joint to start drawing from</param>
         /// <param name="jointType1">joint to end drawing at</param>
+        /// <param name="col"> segun este valor se pintaran el hueso de un color determinado</param>
         private void DrawBone(Skeleton skeleton, DrawingContext drawingContext, JointType jointType0, JointType jointType1, int col=0)
         {
             Joint joint0 = skeleton.Joints[jointType0];
