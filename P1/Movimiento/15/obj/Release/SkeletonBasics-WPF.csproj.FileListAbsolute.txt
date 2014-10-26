@@ -9,3 +9,4 @@ C:\Users\Jick-PC\Desktop\Julio\Trabajo\Universidad\ICC\NPI\Practicas\juliostuff\
 C:\Users\Jick-PC\Desktop\Julio\Trabajo\Universidad\ICC\NPI\Practicas\juliostuff\P1\Movimiento\15\obj\Release\SkeletonBasics-WPF.csproj.GenerateResource.Cache
 C:\Users\Jick-PC\Desktop\Julio\Trabajo\Universidad\ICC\NPI\Practicas\juliostuff\P1\Movimiento\15\obj\Release\SkeletonBasics-WPF.exe
 C:\Users\Jick-PC\Desktop\Julio\Trabajo\Universidad\ICC\NPI\Practicas\juliostuff\P1\Movimiento\15\obj\Release\SkeletonBasics-WPF.pdb
+C:\Users\Jick-PC\Desktop\Julio\Trabajo\Universidad\ICC\NPI\Practicas\juliostuff\P1\Movimiento\15\obj\Release\SkeletonBasics-WPF.csprojResolveAssemblyReference.cache

@@ -500,7 +500,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// <returns> Distancia entre dos puntos double</returns>
         private static double dist_ecuclidea(double p1_x, double p2_x, double p1_y, double p2_y)
         {
-            return Math.Sqrt(Math.Pow((p2_x-p1_x),2)+(Math.Pow((p2_y-p1_y,2))));
+            return Math.Sqrt(Math.Pow((p2_x-p1_x),2)+(Math.Pow((p2_y-p1_y),2)));
         }
 
 
