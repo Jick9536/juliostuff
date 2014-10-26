@@ -31,7 +31,7 @@ using System.Windows.Shapes;
 using System.Windows.Shell;
 
 
-namespace Microsoft.Samples.Kinect.SkeletonBasics {
+namespace Skeleton {
     
     
     /// <summary>
@@ -104,13 +104,13 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics {
             case 1:
             
             #line 4 "..\..\MainWindow.xaml"
-            ((Microsoft.Samples.Kinect.SkeletonBasics.MainWindow)(target)).Loaded += new System.Windows.RoutedEventHandler(this.WindowLoaded);
+            ((Skeleton.MainWindow)(target)).Loaded += new System.Windows.RoutedEventHandler(this.WindowLoaded);
             
             #line default
             #line hidden
             
             #line 4 "..\..\MainWindow.xaml"
-            ((Microsoft.Samples.Kinect.SkeletonBasics.MainWindow)(target)).Closing += new System.ComponentModel.CancelEventHandler(this.WindowClosing);
+            ((Skeleton.MainWindow)(target)).Closing += new System.ComponentModel.CancelEventHandler(this.WindowClosing);
             
             #line default
             #line hidden

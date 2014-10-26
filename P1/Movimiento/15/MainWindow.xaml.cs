@@ -230,8 +230,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
                         if (skel.TrackingState == SkeletonTrackingState.Tracked)
                         {
-                            this.position15(skel);
                             this.DrawBonesAndJoints(skel, dc);
+                            this.position15(skel,dc);
+                            
                         }
                         else if (skel.TrackingState == SkeletonTrackingState.PositionOnly)
                         {
@@ -251,40 +252,40 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         }
 
         /// <summary>
-        /// Draws a skeleton's bones and joints
+        /// Draws a skeleton's bones and joints. En nuestro caso todos los huesos no afectados
         /// </summary>
         /// <param name="skeleton">skeleton to draw</param>
         /// <param name="drawingContext">drawing context to draw to</param>
         private void DrawBonesAndJoints(Skeleton skeleton, DrawingContext drawingContext)
         {
             // Render Torso
-           // this.DrawBone(skeleton, drawingContext, JointType.Head, JointType.ShoulderCenter);
+            this.DrawBone(skeleton, drawingContext, JointType.Head, JointType.ShoulderCenter);
             this.DrawBone(skeleton, drawingContext, JointType.ShoulderCenter, JointType.ShoulderLeft);
             this.DrawBone(skeleton, drawingContext, JointType.ShoulderCenter, JointType.ShoulderRight);
-            //this.DrawBone(skeleton, drawingContext, JointType.ShoulderCenter, JointType.Spine);
-            //this.DrawBone(skeleton, drawingContext, JointType.Spine, JointType.HipCenter);
-            //this.DrawBone(skeleton, drawingContext, JointType.HipCenter, JointType.HipLeft);
-            //this.DrawBone(skeleton, drawingContext, JointType.HipCenter, JointType.HipRight);
+            this.DrawBone(skeleton, drawingContext, JointType.ShoulderCenter, JointType.Spine);
+            this.DrawBone(skeleton, drawingContext, JointType.Spine, JointType.HipCenter);
+            this.DrawBone(skeleton, drawingContext, JointType.HipCenter, JointType.HipLeft);
+            this.DrawBone(skeleton, drawingContext, JointType.HipCenter, JointType.HipRight);
 
             // Left Arm
-            this.DrawBone(skeleton, drawingContext, JointType.ShoulderLeft, JointType.ElbowLeft);
-            this.DrawBone(skeleton, drawingContext, JointType.ElbowLeft, JointType.WristLeft);
-            this.DrawBone(skeleton, drawingContext, JointType.WristLeft, JointType.HandLeft);
+            //this.DrawBone(skeleton, drawingContext, JointType.ShoulderLeft, JointType.ElbowLeft);
+            //this.DrawBone(skeleton, drawingContext, JointType.ElbowLeft, JointType.WristLeft);
+            //this.DrawBone(skeleton, drawingContext, JointType.WristLeft, JointType.HandLeft);
 
             // Right Arm
-            this.DrawBone(skeleton, drawingContext, JointType.ShoulderRight, JointType.ElbowRight);
-            this.DrawBone(skeleton, drawingContext, JointType.ElbowRight, JointType.WristRight);
-            this.DrawBone(skeleton, drawingContext, JointType.WristRight, JointType.HandRight);
+            //this.DrawBone(skeleton, drawingContext, JointType.ShoulderRight, JointType.ElbowRight);
+            //this.DrawBone(skeleton, drawingContext, JointType.ElbowRight, JointType.WristRight);
+            //this.DrawBone(skeleton, drawingContext, JointType.WristRight, JointType.HandRight);
 
             // Left Leg
-            this.DrawBone(skeleton, drawingContext, JointType.HipLeft, JointType.KneeLeft);
-            this.DrawBone(skeleton, drawingContext, JointType.KneeLeft, JointType.AnkleLeft);
-            this.DrawBone(skeleton, drawingContext, JointType.AnkleLeft, JointType.FootLeft);
+            //this.DrawBone(skeleton, drawingContext, JointType.HipLeft, JointType.KneeLeft);
+            //this.DrawBone(skeleton, drawingContext, JointType.KneeLeft, JointType.AnkleLeft);
+            //this.DrawBone(skeleton, drawingContext, JointType.AnkleLeft, JointType.FootLeft);
 
             // Right Leg
-            //this.DrawBone(skeleton, drawingContext, JointType.HipRight, JointType.KneeRight);
-            //this.DrawBone(skeleton, drawingContext, JointType.KneeRight, JointType.AnkleRight);
-            //this.DrawBone(skeleton, drawingContext, JointType.AnkleRight, JointType.FootRight);
+            this.DrawBone(skeleton, drawingContext, JointType.HipRight, JointType.KneeRight);
+            this.DrawBone(skeleton, drawingContext, JointType.KneeRight, JointType.AnkleRight);
+            this.DrawBone(skeleton, drawingContext, JointType.AnkleRight, JointType.FootRight);
 
             // Render Joints
             foreach (Joint joint in skeleton.Joints)
@@ -327,7 +328,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// <param name="drawingContext">drawing context to draw to</param>
         /// <param name="jointType0">joint to start drawing from</param>
         /// <param name="jointType1">joint to end drawing at</param>
-        private void DrawBone(Skeleton skeleton, DrawingContext drawingContext, JointType jointType0, JointType jointType1)
+        private void DrawBone(Skeleton skeleton, DrawingContext drawingContext, JointType jointType0, JointType jointType1, int col=0)
         {
             Joint joint0 = skeleton.Joints[jointType0];
             Joint joint1 = skeleton.Joints[jointType1];
@@ -347,35 +348,125 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             }
 
             // We assume all drawn bones are inferred unless BOTH joints are tracked
+            //Modificamos esta función para que pinte los colores adecuadamente. Azul si te has pasado de la posición, amarillo si nos has llegado, verde si es correcta y rojo si te has pasado
             Pen drawPen = this.inferredBonePen;
-            if (joint0.TrackingState == JointTrackingState.Tracked && joint1.TrackingState == JointTrackingState.Tracked)
+            if (joint0.TrackingState == JointTrackingState.Tracked && joint1.TrackingState == JointTrackingState.Tracked && col==0)
             {
                 drawPen = this.trackedBonePen;
+                this.trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 255, 218, 185));
+                drawingContext.DrawLine(drawPen, this.SkeletonPointToScreen(joint0.Position), this.SkeletonPointToScreen(joint1.Position));
             }
 
-            drawingContext.DrawLine(drawPen, this.SkeletonPointToScreen(joint0.Position), this.SkeletonPointToScreen(joint1.Position));
-        }
-        private void position15(Skeleton skeleton)
-        {
-            if (this.cruz(skeleton) && this.pierna_izq_arriba(skeleton))
+            if (joint0.TrackingState == JointTrackingState.Tracked && joint1.TrackingState == JointTrackingState.Tracked && col == 1)
             {
-                //Pintamos en verde a lo bruto
-                this.trackedBonePen = new Pen(Brushes.Green, 6);
+                drawPen = new Pen(Brushes.Green, 6);
                 this.trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
+                drawingContext.DrawLine(drawPen, this.SkeletonPointToScreen(joint0.Position), this.SkeletonPointToScreen(joint1.Position));
             }
-            else
+
+            if (joint0.TrackingState == JointTrackingState.Tracked && joint1.TrackingState == JointTrackingState.Tracked && col == 2)
             {
-                //Pintamos el Color por defecto
-                this.trackedBonePen = new Pen(Brushes.Red, 6);
-                this.trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 255, 218, 185));
+                drawPen = new Pen(Brushes.Yellow, 6);
+                this.trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
+                drawingContext.DrawLine(drawPen, this.SkeletonPointToScreen(joint0.Position), this.SkeletonPointToScreen(joint1.Position));
             }
+
+            if (joint0.TrackingState == JointTrackingState.Tracked && joint1.TrackingState == JointTrackingState.Tracked && col == 3)
+            {
+                drawPen = new Pen(Brushes.Blue, 6);
+                this.trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
+                drawingContext.DrawLine(drawPen, this.SkeletonPointToScreen(joint0.Position), this.SkeletonPointToScreen(joint1.Position));
+
+            }
+
+        }
+
+        private void dibuja_cruz(Skeleton skeleton, DrawingContext drawingContext, int col=0)
+        {
+            // Render Torso
+            this.DrawBone(skeleton, drawingContext, JointType.ShoulderCenter, JointType.ShoulderLeft,col);
+            this.DrawBone(skeleton, drawingContext, JointType.ShoulderCenter, JointType.ShoulderRight,col);
+
+            // Left Arm
+            this.DrawBone(skeleton, drawingContext, JointType.ShoulderLeft, JointType.ElbowLeft,col);
+            this.DrawBone(skeleton, drawingContext, JointType.ElbowLeft, JointType.WristLeft,col);
+            this.DrawBone(skeleton, drawingContext, JointType.WristLeft, JointType.HandLeft,col);
+
+            // Right Arm
+            this.DrawBone(skeleton, drawingContext, JointType.ShoulderRight, JointType.ElbowRight,col);
+            this.DrawBone(skeleton, drawingContext, JointType.ElbowRight, JointType.WristRight,col);
+            this.DrawBone(skeleton, drawingContext, JointType.WristRight, JointType.HandRight,col);
+        }
+
+        private void dibuja_pierna_mov(Skeleton skeleton, DrawingContext drawingContext, int col = 0)
+        {
+            // Render Torso
+            // Left Leg
+            this.DrawBone(skeleton, drawingContext, JointType.HipLeft, JointType.KneeLeft,col);
+            this.DrawBone(skeleton, drawingContext, JointType.KneeLeft, JointType.AnkleLeft,col);
+            this.DrawBone(skeleton, drawingContext, JointType.AnkleLeft, JointType.FootLeft,col);
+        }
+
+
+
+        /// <summary>
+        /// Detecta posición 15 al completo y pinta de rojo y verde segun se haya alcanzado la posición o no
+        /// </summary>
+        /// <param name="skeleton"> skeleton acual. Nube de puntos</param>
+        private void position15(Skeleton skeleton, DrawingContext drawingContext)
+        {
+            //Pintamos los puntos de brazos en cruz segun su posición
+            //Rojo
+            if (this.cruz(skeleton)==0)
+            {
+                dibuja_cruz(skeleton, drawingContext);
+            }
+            //Verde
+            if (this.cruz(skeleton) == 1)
+            {
+                dibuja_cruz(skeleton, drawingContext,1);
+            }
+            //Amarillo
+            if (this.cruz(skeleton) == 2)
+            {
+                dibuja_cruz(skeleton, drawingContext,2);
+            }
+            //Azul
+            if (this.cruz(skeleton) == 3)
+            {
+                dibuja_cruz(skeleton, drawingContext,3);
+            }
+
+            //Pintamos la pierna segun su posición
+            //Rojo
+            if (this.pierna_izq_arriba(skeleton)==0)
+            {
+                dibuja_pierna_mov(skeleton, drawingContext);
+            }
+            //Verde
+            if (this.pierna_izq_arriba(skeleton) == 1)
+            {
+                dibuja_cruz(skeleton, drawingContext,1);
+            }
+            //Amarillo
+            if (this.pierna_izq_arriba(skeleton) == 2)
+            {
+                dibuja_cruz(skeleton, drawingContext,2);
+            }
+            //Azul
+            if (this.pierna_izq_arriba(skeleton) == 3)
+            {
+                dibuja_cruz(skeleton, drawingContext,3);
+            }
+
+
         }
 
         /// <summary>
         /// Detecta posición en cruz
         /// </summary>
         /// <param name="skeleton"> skeleton acual. Nube de puntos</param>
-        private bool cruz (Skeleton skeleton)
+        private int cruz (Skeleton skeleton)
         {
             //Guardamos las posiciones a comparar
             //Parte izquierda del brazo
@@ -400,11 +491,42 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 (((pos_y_hombro_right * 1.05) <= pos_y_wrist_right) || ((pos_y_hombro_right * 0.95) >= pos_y_wrist_right)))
                 )
             {
-                return true;    
+                return 1;    
             }
             else
             {
-                return false;
+                //Brazo por encima
+                if (!((((pos_y_hombro_left * 1.05) >= pos_y_elbow_left))
+                &&
+                (((pos_y_hombro_left * 1.05) >= pos_y_wrist_left))
+                &&
+                (((pos_y_hombro_right * 1.05) >= pos_y_elbow_right))
+                &&
+                (((pos_y_hombro_right * 1.05) >= pos_y_wrist_right))
+                ))
+                {
+                    return 3;
+                }
+                else
+                {
+                    //Brazo por debajo
+                    if (!((((pos_y_hombro_left * 1.05) <= pos_y_elbow_left))
+                       &&
+                       (((pos_y_hombro_left * 1.05) <= pos_y_wrist_left))
+                       &&
+                       (((pos_y_hombro_right * 1.05) <= pos_y_elbow_right))
+                       &&
+                       (((pos_y_hombro_right * 1.05) <= pos_y_wrist_right))
+                       ))
+                    {
+                        return 2;
+                    }
+                        //Incorrecto
+                    else
+                    {
+                        return 0;
+                    }
+                }
             }
          }
 
@@ -413,7 +535,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// </summary>
         /// <param name="skeleton"> skeleton acual. Nube de puntos</param>
         /// <param name="angulo"> Angulo deseado alcanzar al mover el pie. Consideramos que este angulo no va a poder pasar de 90 grados. Si no se especifica un angulo presupongo angulo de 20 grados</param>
-        private bool pierna_izq_arriba(Skeleton skeleton, double angulo = 20.0)
+        private int pierna_izq_arriba(Skeleton skeleton, double angulo = 20.0)
         {
             //Si el angulo propocionado esta dentro de lo razonable 
             if (angulo >= 0 && angulo <= 90)
@@ -429,18 +551,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 Joint tobillo_derecho = skeleton.Joints[JointType.AnkleRight];
                 SkeletonPoint pos_tobillo_derecho = tobillo_derecho.Position;
 
-                
-                //int a, b, c, d;
-                //double distanciaPD, distanciaPI, angulo, division, grados;
-                //double g_entrada;
-                //g_entrada = 0;
-
-                //a = (int)(pos_rodilla_izquierda.Z * 100.0);
-                //b = (int)(pos_tobillo_izquierdo.Z * 100.0);
-                //c = (int)(pos_rodilla_derecha.Y * 100.0);
-               // d = (int)(pos_tobillo_derecho.Y * 100.0);
-
-               // distanciaPI = Math.Abs(b - a);                                        // lado opuesto
                // distanciaPD = Math.Abs(c - d);                                        // lado adyacente
 
                 //Calculo de catetos del triangulo
@@ -451,32 +561,41 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 //Calculo de angulo a comparar
                 double angulo_actual =  conversor_rad_a_grados(Math.Atan((cateto_a/cateto_b)));
 
-                /*  if (grados > 20)
+                if (angulo_actual == 0)
                 {
-                    agregarLinea(skeleton.Joints[JointType.KneeLeft], skeleton.Joints[JointType.AnkleLeft], 2);
-                    agregarLinea(skeleton.Joints[JointType.AnkleLeft], skeleton.Joints[JointType.FootLeft], 2);
+                    return 0;
+                }
 
+                //Posición correcta
+                if ((angulo_actual >= angulo * 1.05) && angulo_actual <= angulo * 0.95)
+                {
+                    return 1;
                 }
                 else
                 {
-                    agregarLinea(skeleton.Joints[JointType.KneeLeft], skeleton.Joints[JointType.AnkleLeft], 1);
-                    agregarLinea(skeleton.Joints[JointType.AnkleLeft], skeleton.Joints[JointType.FootLeft], 1);
+                    //Por debajo
+                    if ((angulo_actual <= angulo * 0.95) && angulo_actual != 0)
+                    {
+                        return 2;
+                    }
+                    else
+                    {
+                        //Por encima
+                        if (angulo_actual >= angulo * 1.05)
+                        {
+                            return 3;
+                        }
+                        else
+                        {
+                            return 0;
+                        }
+                    }
                 }
-                */
 
-                if (angulo_actual >= angulo)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
             }
-             //En caso contrario no se puede realizar el movimiento de la pierna
             else
             {
-                return false;
+                return -1;
             }
         }
 
