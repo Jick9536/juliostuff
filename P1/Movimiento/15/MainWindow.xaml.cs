@@ -466,6 +466,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// Detecta posición en cruz
         /// </summary>
         /// <param name="skeleton"> skeleton acual. Nube de puntos</param>
+        /// <return> entero . -1 si el angulo no es valido. 0 si la posición no es correcta. 1 si la posición es correcta. 2 si esta por debajo. 3. si esta por arriba</return>
         private int cruz (Skeleton skeleton)
         {
             //Guardamos las posiciones a comparar
@@ -535,6 +536,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// </summary>
         /// <param name="skeleton"> skeleton acual. Nube de puntos</param>
         /// <param name="angulo"> Angulo deseado alcanzar al mover el pie. Consideramos que este angulo no va a poder pasar de 90 grados. Si no se especifica un angulo presupongo angulo de 20 grados</param>
+        /// <return> entero . -1 si el angulo no es valido. 0 si la posición no es correcta. 1 si la posición es correcta. 2 si esta por debajo. 3. si esta por arriba</return>
         private int pierna_izq_arriba(Skeleton skeleton, double angulo = 20.0)
         {
             //Si el angulo propocionado esta dentro de lo razonable 
@@ -551,7 +553,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 Joint tobillo_derecho = skeleton.Joints[JointType.AnkleRight];
                 SkeletonPoint pos_tobillo_derecho = tobillo_derecho.Position;
 
-               // distanciaPD = Math.Abs(c - d);                                        // lado adyacente
+             
 
                 //Calculo de catetos del triangulo
 
