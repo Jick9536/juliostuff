@@ -550,8 +550,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// <param name="skeleton"> skeleton acual. Nube de puntos</param>
         /// <param name="angulo"> Angulo deseado alcanzar al mover el pie. Consideramos que este angulo no va a poder pasar de 90 grados. Si no se especifica un angulo presupongo angulo de 20 grados</param>
         /// <return> entero . -1 si el angulo no es valido. 0 si la posición no es correcta. 1 si la posición es correcta. 2 si esta por debajo. 3. si esta por arriba</return>
-        private int pierna_izq_arriba(Skeleton skeleton, double angulo = 20.0)
+        private int pierna_izq_arriba(Skeleton skeleton, double angulo = 10.0)
         {
+            //Color
+            int num = -1;
+             
             //Si el angulo propocionado esta dentro de lo razonable 
             if (angulo >= 0 && angulo <= 90)
             {
@@ -565,9 +568,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 SkeletonPoint pos_rodilla_derecha = rodilla_derecha.Position;
                 Joint tobillo_derecho = skeleton.Joints[JointType.AnkleRight];
                 SkeletonPoint pos_tobillo_derecho = tobillo_derecho.Position;
-
-             
-
+                
                 //Calculo de catetos del triangulo
 
                 double cateto_a = dist_ecuclidea(pos_tobillo_izquierdo.Z, pos_tobillo_izquierdo.Z, pos_rodilla_izquierda.Y, pos_tobillo_izquierdo.Y);           // lado adyacente
@@ -575,43 +576,39 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
                 //Calculo de angulo a comparar
                 double angulo_actual =  conversor_rad_a_grados(Math.Atan((cateto_a/cateto_b)));
-
+               
                 if (angulo_actual == 0)
                 {
-                    return 0;
+                    num = 0;
                 }
 
-                //Posición correcta
-                if ((angulo_actual >= angulo * 1.05) && angulo_actual <= angulo * 0.95)
-                {
-                    return 1;
-                }
-                else
-                {
-                    //Por debajo
-                    if ((angulo_actual <= angulo * 0.95) && angulo_actual != 0)
-                    {
-                        return 2;
+               //Por encima
+               if ((angulo_actual <= angulo * 0.95) && angulo_actual != 0)
+               {
+                   num = 3;
+               }
+               else
+               {
+                   //Por debajo
+                   if (angulo_actual >= angulo * 1.05)
+                   {
+                       num = 2;
+                   }
+                   else
+                   {
+                       //Posición correcta
+                       if ((angulo_actual >= angulo * 1.05) && (angulo_actual <= angulo * 0.95))
+                       {
+                           num = 1;
+                       }
+                       else
+                       {
+                           num = 0;
+                       }
                     }
-                    else
-                    {
-                        //Por encima
-                        if (angulo_actual >= angulo * 1.05)
-                        {
-                            return 3;
-                        }
-                        else
-                        {
-                            return 0;
-                        }
-                    }
                 }
-
             }
-            else
-            {
-                return -1;
-            }
+            return num; 
         }
 
         /// <summary>
