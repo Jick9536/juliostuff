@@ -19,6 +19,18 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly Pen rojo = new Pen(Brushes.Red, 6);
+        private readonly Brush puntos_rojos =  new SolidColorBrush(Color.FromArgb(255, 255, 218, 185));
+ 
+        private readonly Pen amarillo = new Pen(Brushes.Yellow, 6);
+        private readonly Brush puntos_amarillos = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
+
+        private readonly Pen azul = new Pen(Brushes.Cyan, 6);
+        private readonly Brush puntos_azules =  new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
+
+        private readonly Pen verde = new Pen(Brushes.Green, 6);
+        private readonly Brush puntos_verdes =  new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
+
         /// <summary>
         /// Width of output drawing
         /// </summary>
@@ -447,17 +459,17 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             //Verde
             if (this.pierna_izq_arriba(skeleton) == 1)
             {
-                dibuja_cruz(skeleton, drawingContext,1);
+                dibuja_pierna_mov(skeleton, drawingContext,1);
             }
             //Amarillo
             if (this.pierna_izq_arriba(skeleton) == 2)
             {
-                dibuja_cruz(skeleton, drawingContext,2);
+                dibuja_pierna_mov(skeleton, drawingContext,2);
             }
             //Azul
             if (this.pierna_izq_arriba(skeleton) == 3)
             {
-                dibuja_cruz(skeleton, drawingContext,3);
+                dibuja_pierna_mov(skeleton, drawingContext,3);
             }
 
 
